@@ -26,6 +26,7 @@ class ApiServices {
    String get myPlan => "$baseUrl/getplans";
    String get getQuestion => "$baseUrl/getquestion";
    String get homeDetails => "$baseUrl/VideoPackagesDetails";
+   String get trainer => "$baseUrl/gettrainer";
 
    /// profile api
      String get profile => "$baseUrl/GetProfile";

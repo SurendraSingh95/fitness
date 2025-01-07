@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'Network Connectivity/connectivty_check.dart';
 import 'Screens/question_answer_screen.dart';
+import 'Screens/select_trainer_screen.dart';
 import 'SplashScreen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -99,8 +100,8 @@ class _MyAppState extends State<MyApp> {
       darkTheme: AppThemes.darkTheme,
       themeMode: themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
       debugShowCheckedModeBanner: false,
-    //  home: const ExactScoreTableUI(),
-      home: const SplashScreen(),
+     home: const SelectTrainerScreen(),
+     // home: const SplashScreen(),
     );
   }
 }

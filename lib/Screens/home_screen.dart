@@ -20,10 +20,11 @@ import '../custom/my_shimmer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, this.userName, this.userEmail,this.questionId});
+  const HomeScreen({super.key, this.userName, this.userEmail,this.questionId,this.trainerName,this.trainerImage,this.trainerId});
 
-  final String? userName, userEmail;
+  final String? userName,trainerName,trainerImage, userEmail;
   final String? questionId;
+  final int? trainerId;
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -166,7 +167,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   }),
               const SizedBox(height: 10),
               Obx(() {
-                return homeController.isLoading1.value
+                return
+                  homeController.profileData.isEmpty || homeController.profileData.first.name == null?
+                  homeController.isLoading1.value
                     ? const Center(child: CupertinoActivityIndicator())
                     : homeController.profileData.isEmpty || homeController.profileData.first.name == null
                     ? Center(
@@ -175,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     .translate('No_data_found')
                                     .toString(),
                                 fontSize: 4))
-                        : Column(
+                    : Column(
                             children: [
                               Obx(() {
                                 return Padding(
@@ -237,7 +240,69 @@ class _HomeScreenState extends State<HomeScreen> {
                                 );
                               }),
                             ],
-                          );
+                          ):
+                  Column(
+                    children: [
+                      Obx(() {
+                        return Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: homeController.profileData.isEmpty
+                              ? const CupertinoActivityIndicator()
+                              : (homeController.profileData.first.profileImage == null ||
+                              homeController.profileData.first.profileImage == ""
+                              ?  Card(
+                            color: FitnessColor.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100),
+                              side: BorderSide(
+                                color: Colors.black.withOpacity(0.2),
+                                width: 1,
+                              ),
+
+                            ),
+                            child: const CircleAvatar(
+                              backgroundColor: FitnessColor.white,
+                              radius: 55,
+                              backgroundImage: AssetImage(
+                                  "assets/images/no Image.png"),
+                            ),
+                          )
+                              : Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100),
+                              side: BorderSide(
+                                color: Colors.black.withOpacity(0.2),
+                                width: 1,
+                              ),
+
+                            ),
+                            child: CircleAvatar(
+                              backgroundColor: FitnessColor.white,
+                              radius: 58,
+                              backgroundImage: NetworkImage(widget.trainerImage.toString()),
+                            ),
+                          )),
+                        );
+                      }),
+                      Obx(() {
+                        return CustomText1(
+                          // text: DemoLocalization.of(context)!.translate('Rahul').toString(),//"Rahul",
+                          text: homeController
+                              .profileData.first.name ==
+                              null
+                              ? homeController.profileData.first.email
+                              .toString()
+                              : homeController
+                              .profileData.first.name ??
+                              "",
+                          fontSize: 5.5,
+                          color: FitnessColor.colorTextPrimary,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: Fonts.arial,
+                        );
+                      }),
+                    ],
+                  );
               }),
               Obx(() {
                 return homeController.isLoading2.value

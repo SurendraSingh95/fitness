@@ -4,6 +4,7 @@ import 'package:fitness/Api%20Services1/api_services.dart';
 import 'package:fitness/Model/get_member_ship_plan_model.dart';
 import 'package:fitness/Model/get_profile_model.dart';
 import 'package:fitness/Model/get_question_model.dart';
+import 'package:fitness/Model/get_traniner_model.dart';
 
 import 'package:fitness/utils/shared_preferences.dart';
 
@@ -34,9 +35,11 @@ class QuestionController extends GetxController {
 
    ///api urls
    String get getQuestionURL => apiServices.getQuestion;
+   String get getTrainerURL => apiServices.trainer;
 
    ///home data lists
    RxList<QuestionList> questionList = <QuestionList>[].obs;
+   RxList<TrainerList> trainerList = <TrainerList>[].obs;
 
    ///get question list
    getQuestionApi() async {
@@ -45,6 +48,18 @@ class QuestionController extends GetxController {
       questionList.value = GetQuestionsModel.fromJson(response).data;
       isLoading.value = false;
    }
+
+
+   ///get trainer list
+   getTrainerApi() async {
+      isLoading.value = true;
+      dynamic response = await apiBaseHelper.getAPICall(Uri.parse(getTrainerURL),langCode:languageCode.toString());
+      trainerList.value = GetTrainerModel.fromJson(response).data;
+   print("axssadas${trainerList.value.length}");
+   print("sdadadas${trainerList.value.first.title}");
+      isLoading.value = false;
+   }
+
 
    @override
    Future<void> refresh() async {
