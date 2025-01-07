@@ -41,24 +41,26 @@ class _SelectTrainerScreenState extends State<SelectTrainerScreen> {
                   }
               ),
             ),
-            DropdownButton2<String>(
-              isExpanded: true,
-              value: selectedTrainer,
-              hint:CustomText(text:  DemoLocalization.of(context)!.translate('Select_Trainer').toString(), fontSize: 5,fontFamily: Fonts.arial,color: isDarkMode ? FitnessColor.white : FitnessColor.primary ,),
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedTrainer = newValue;
-                });
-              },
-              items: trainers.map<DropdownMenuItem<String>>((String trainer) {
-                return DropdownMenuItem<String>(
-                  value: trainer,
-                  child: Text(
-                    trainer,
-                    style: TextStyle(color: isDarkMode ? FitnessColor.white : FitnessColor.primary),
-                  ),
-                );
-              }).toList(),
+            DropdownButtonHideUnderline(
+              child: DropdownButton2<String>(
+                isExpanded: true,
+                value: selectedTrainer,
+                hint:CustomText(text:  DemoLocalization.of(context)!.translate('Select_Trainer').toString(), fontSize: 5,fontFamily: Fonts.arial,color: isDarkMode ? FitnessColor.white : FitnessColor.primary ,),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedTrainer = newValue;
+                  });
+                },
+                items: trainers.map<DropdownMenuItem<String>>((String trainer) {
+                  return DropdownMenuItem<String>(
+                    value: trainer,
+                    child: Text(
+                      trainer,
+                      style: TextStyle(color: isDarkMode ? FitnessColor.white : FitnessColor.primary),
+                    ),
+                  );
+                }).toList(),
+              ),
             ),
 
             const SizedBox(height: 20),
