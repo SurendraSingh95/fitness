@@ -90,6 +90,7 @@ dev_dependencies:
   #read sms and auto fill otp fields
   sms_autofill:
   flutter_html:
+  dropdown_button2:
 
   get:
   intl:

@@ -105,8 +105,9 @@
 //     );
 //   }
 // }
+import 'package:fitness/PurChaseProgram/StartNowSecond.dart';
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 
 class ExactScoreTableUI extends StatefulWidget {
   const ExactScoreTableUI({super.key});
@@ -171,12 +172,22 @@ class _ExactScoreTableUIState extends State<ExactScoreTableUI> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Priority Score Table"),
+        title: const Text("Priority Score Table",style: TextStyle(fontSize: 15)),
         centerTitle: true,
+       actions: [
+         InkWell(
+           onTap: (){
+             Get.to(()=>const StartNowSecond());
+           },
+             child: const Padding(
+               padding: EdgeInsets.only(right: 10),
+               child: Text("Next",style: TextStyle(fontSize: 15),),
+             ))
+       ],
        // backgroundColor: Colors.green,
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             Table(
@@ -202,7 +213,7 @@ class _ExactScoreTableUIState extends State<ExactScoreTableUI> {
 
   TableRow _buildHeaderRow() {
     return TableRow(
-      decoration: BoxDecoration(color: Colors.greenAccent),
+      decoration: const BoxDecoration(color: Colors.greenAccent),
       children: [
         _buildCell("Category", isHeader: true),
         _buildCell("High Priority", isHeader: true),

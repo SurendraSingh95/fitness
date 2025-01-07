@@ -1,14 +1,11 @@
-import 'package:fitness/auth/LoginScreen.dart';
+import 'package:fitness/Screens/select_trainer_screen.dart';
 import 'package:flutter/material.dart';
 import '../colors.dart';
 import '../custom/CstAppbarWithtextimage.dart';
 import '../custom/CustomButton.dart';
-import '../custom/CustomText.dart';
-import '../custom/CustomWidgetImage.dart';
+
 import '../custom/Fonts.dart';
-import '../onbordingpage/OnboardingPage.dart';
 import '../utils/Demo_Localization.dart';
-import 'PurChaseProgram.dart';
 import 'package:get/get.dart';
 class StartNowSecond extends StatefulWidget {
   const StartNowSecond({super.key});
@@ -41,7 +38,7 @@ class _StartNowSecondState extends State<StartNowSecond> {
                   icon: Icons.arrow_back_ios,
                   fontFamily: Fonts.arial,
                     onImageTap: (){
-
+                     Get.back();
                     }
                 ),
               ),
@@ -61,7 +58,7 @@ class _StartNowSecondState extends State<StartNowSecond> {
                   letterSpacing: 2.0,
                   color: FitnessColor.colorTextThird,
                   onPressed:(){
-                    Get.to(()=>const LoginScreen());
+                    Get.to(()=>const SelectTrainerScreen());
 
                   },
                 ),

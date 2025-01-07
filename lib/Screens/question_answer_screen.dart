@@ -435,12 +435,13 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
                   onTap: () {
                     if (answer.key != null) {
                       setState(() {
-                        // selectedValues['${question.id}'] = answer.key!;
-                        selectedValues['${question.id}'] = question.id!;
+                        // Store the selected answer key in the map using the question id as the key
+                        selectedValues['${question.id}'] = answer.key!;
                       });
                     }
+                    // Debugging: to check selected values
                     print("Selected Values: ${selectedValues.values.join(',')}");
-                    print("Selected Values: $entry");
+                    print("Selected Values for question ${question.id}: ${selectedValues['${question.id}']}");
                   },
                   child: Row(
                     children: [
@@ -448,7 +449,8 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Image.network(
-                            "https://tfbfitness.com/${answer.value!.icon}",height: 40,width: 40,
+                            "https://tfbfitness.com/${answer.value!.icon}",
+                            height: 40, width: 40,
                             fit: BoxFit.contain,
                             loadingBuilder: (context, child, loadingProgress) {
                               if (loadingProgress == null) {
@@ -494,7 +496,8 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
                         ),
                     ],
                   ),
-                ),
+                )
+
               ),
             );
 
