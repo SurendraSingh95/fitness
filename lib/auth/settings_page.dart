@@ -22,7 +22,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   int? _selectedLanguageIndex;
-  final List<String> _languageCodes = ['ar', 'en'];
+  final List<String> _languageCodes = ['ar','en'];
   late List<String> _languages; // Declare this as a late variable
 
   @override
@@ -82,7 +82,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         },
                         borderRadius: BorderRadius.circular(8.0),
                         child: Container(
-                          padding:  EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                          padding:  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                           decoration: BoxDecoration(
                             color: isDarkMode ?  FitnessColor.colorsociallogintext:_selectedLanguageIndex == index ? Colors.blue.withOpacity(0.1) : Colors.transparent,
                             borderRadius: BorderRadius.circular(8.0),
@@ -107,14 +107,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               const SizedBox(width: 12),
 
                               CustomText(text: _languages[index], fontSize: 5,fontFamily: Fonts.arial,)
-                              // Text(
-                              //   _languages[index],
-                              //   style: TextStyle(
-                              //     fontSize: 18,
-                              //     fontWeight: FontWeight.w500,
-                              //     color: _selectedLanguageIndex == index ? FitnessColor.primary : Colors.black87,
-                              //   ),
-                              // ),
+
                             ],
                           ),
                         ),
@@ -151,7 +144,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   // Function to change the app's language
   void _changeLanguage(String languageCode) {
-    Locale newLocale = Locale(languageCode, languageCode == 'ar' ? 'US' : 'NP');
+    Locale newLocale = Locale(languageCode, languageCode == 'ar' ? 'US' : 'KW');
     Get.updateLocale(newLocale);
   }
 }

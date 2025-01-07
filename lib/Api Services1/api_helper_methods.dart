@@ -23,7 +23,7 @@ class ApiException implements Exception {
 }
 
 class ApiBaseHelper {
-  Future<dynamic> postAPICall(Uri url, Map param, {String langCode = 'en'}) async {
+  Future<dynamic> postAPICall(Uri url, Map param, {String langCode = 'ar'}) async {
     log('url-->$url');
     log('parameter-->$param');
     dynamic responseJson;
@@ -100,9 +100,7 @@ class ApiBaseHelper {
     log('url-->$url');
     try {
       final response =
-          await get(url, headers: {
-            'Accept-Language' : langCode
-          }).timeout(const Duration(seconds: 50));
+          await get(url, headers: {'Accept-Language':langCode}).timeout(const Duration(seconds: 50));
       log('status code ${response.statusCode}');
       responseJson = _response(response);
       /*if(responseJson['error']??true){

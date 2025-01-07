@@ -71,7 +71,8 @@ Widget myHorizontalShimmer({double height = 80, double width = 150}) {
   );
 }
 
-Widget imageLoaderShimmer({double height = 30}) {
+// Shimmer loader widget
+Widget imageLoaderShimmer({double height = 30.0, double width = double.infinity}) {
   return SafeArea(
     child: Builder(
       builder: (context) {
@@ -83,23 +84,15 @@ Widget imageLoaderShimmer({double height = 30}) {
         return Shimmer.fromColors(
           baseColor: baseColor,
           highlightColor: highlightColor,
-          enabled: true,
-          child: ListView.builder(
-            padding: const EdgeInsets.only(top: 10),
-            itemCount: 2,
-            shrinkWrap: true,
-            itemBuilder: (context, index) => Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                  margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
-                  height: height,
-                  decoration: BoxDecoration(
-                    color: baseColor, // Match container background with baseColor
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-              ],
+          enabled: true, // Set this to false if you want to disable shimmer effect
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+            height: height,
+            width: width, // Use width as you need, it's set to infinity by default
+            decoration: BoxDecoration(
+              color: baseColor,
+              borderRadius: BorderRadius.circular(30),
             ),
           ),
         );
@@ -107,6 +100,7 @@ Widget imageLoaderShimmer({double height = 30}) {
     ),
   );
 }
+
 
 /*Widget myShimmerGrid({double ratio = 1})  {
   return SafeArea(

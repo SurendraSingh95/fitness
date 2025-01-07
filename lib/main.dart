@@ -38,10 +38,11 @@ void main() async {
 
   NetworkConnectivityService();
   await SharedPref.getInstance();
+  SharedPref.setLanguageToPrefs('ar');
 
   Get.put(ThemeController());
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -50,6 +51,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   static void setLocale(BuildContext context, Locale newLocale) {
     _MyAppState state = context.findAncestorStateOfType<_MyAppState>()!;
     debugPrint("state change --> $state");

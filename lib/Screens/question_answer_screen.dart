@@ -435,11 +435,9 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
                   onTap: () {
                     if (answer.key != null) {
                       setState(() {
-                        // Store the selected answer key in the map using the question id as the key
                         selectedValues['${question.id}'] = answer.key!;
                       });
                     }
-                    // Debugging: to check selected values
                     print("Selected Values: ${selectedValues.values.join(',')}");
                     print("Selected Values for question ${question.id}: ${selectedValues['${question.id}']}");
                   },
@@ -450,7 +448,7 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Image.network(
                             "https://tfbfitness.com/${answer.value!.icon}",
-                            height: 40, width: 40,
+                            height: 35, width: 35,
                             fit: BoxFit.contain,
                             loadingBuilder: (context, child, loadingProgress) {
                               if (loadingProgress == null) {
@@ -474,12 +472,12 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
                       ),
                       if (answer.value!.image != null)
                         SizedBox(
-                          width: screenSize.width * 0.35,
+                          width: screenSize.width * 0.30,
                           height: screenSize.height * 0.35,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(0.0),
                               child: Image.network(
                                 "https://tfbfitness.com/${answer.value!.image}",
                                 fit: BoxFit.cover,
