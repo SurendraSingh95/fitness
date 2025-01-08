@@ -21,12 +21,14 @@ class ApiServices {
 
    /// home list
    String get gePlan => "$baseUrl/getMembershipPlans";
-   String get geVideo => "$baseUrl/VideoPackages";
+   String get geVideo => "$baseUrl/plan_wise_video";
    String get purchasePlan => "$baseUrl/MembershipPayment";
    String get myPlan => "$baseUrl/getplans";
    String get getQuestion => "$baseUrl/getquestion";
    String get homeDetails => "$baseUrl/VideoPackagesDetails";
    String get trainer => "$baseUrl/gettrainer";
+   String get trainerWisePlan => "$baseUrl/trainer_wise_plan";
+   String get trainerDetails => "$baseUrl/trainer_datails";
 
    /// profile api
      String get profile => "$baseUrl/GetProfile";

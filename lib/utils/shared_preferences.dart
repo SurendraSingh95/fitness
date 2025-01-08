@@ -23,8 +23,19 @@ class SharedPref {
     prefs!.setString("userType", userType);
   }
 
+
+
   static setLanguageToPrefs(String languageCode) async {
      prefs?.setString('languageCode', languageCode);
+  }
+
+
+  static setTrainerIdPrefs(String trainerId) async {
+    prefs?.setString('trainerId', trainerId);
+  }
+
+  static setTrainerImagePrefs(String trainerImage) async {
+    prefs?.setString('trainerImage', trainerImage);
   }
 
   ///set user logged in or not and login id in local
@@ -76,6 +87,19 @@ class SharedPref {
   static String getLanguageToPrefs()  {
     String? languageCode = prefs!.getString("languageCode");
     return languageCode ?? "ar";
+  }
+
+  /// get trainer id
+  static String getTrainerToPrefs()  {
+    String? trainerId = prefs!.getString("trainerId");
+    return trainerId ?? "";
+  }
+
+
+  /// get trainer image
+  static String getTrainerImagePrefs()  {
+    String? trainerImage = prefs!.getString("trainerImage");
+    return trainerImage ?? "";
   }
 
   static Future<void> initPrefs() async {

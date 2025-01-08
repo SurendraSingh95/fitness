@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:fitness/Controllers/HomeController/home_controller.dart';
+import 'package:fitness/Screens/trainer_details_screen.dart';
+import 'package:fitness/Screens/trainer_multiple_video_screen.dart';
 import 'package:fitness/Utils/utils.dart';
 import 'package:fitness/auth/LoginScreen.dart';
 import 'package:fitness/auth/sign_out_screen.dart';
@@ -11,11 +13,11 @@ import 'package:fitness/custom/CustomText.dart';
 import 'package:fitness/custom/Fonts.dart';
 import 'package:fitness/Screens/profile_details_screen.dart';
 import 'package:fitness/utils/Demo_Localization.dart';
+import 'package:fitness/utils/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
-
 import '../custom/my_shimmer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,9 +43,10 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _controllers = [];
     homeController.getProfileApi();
-    homeController.getMemberShipPlan();
-     homeController.getVideoList();
-    _initializeVideos();
+   // homeController.getMemberShipPlan();
+      homeController.trainerWisePlanApi();
+    // homeController.getVideoList();
+    //_initializeVideos();
   }
 
   String? planId, planPrice;
@@ -117,21 +120,22 @@ class _HomeScreenState extends State<HomeScreen> {
         false;
   }
 
-  _initializeVideos() async {
-    await homeController.getVideoList();
-    setState(() {
-      for (var item in homeController.videoList) {
-        final videoUrl = "https://tfbfitness.com/${item.videoPath}";
-        final controller = VideoPlayerController.networkUrl(Uri.parse(videoUrl))
-          ..initialize().then((_) {
-            setState(() {});
-          }).catchError((error) {
-            print("Error initializing video: $error");
-          });
-        _controllers.add(controller); // Add controller for each video
-      }
-    });
-  }
+  // _initializeVideos() async {
+  //   await homeController.getVideoList();
+  //   setState(() {
+  //     for (var item in homeController.videoList) {
+  //       final videoUrl = "https://tfbfitness.com/${item.videoPath}";
+  //       final controller = VideoPlayerController.networkUrl(Uri.parse(videoUrl))
+  //         ..initialize().then((_) {
+  //           setState(() {});
+  //         }).catchError((error) {
+  //           print("Error initializing video: $error");
+  //         });
+  //       _controllers.add(controller); // Add controller for each video
+  //     }
+  //   });
+  // }
+  String get trainerImage1 => SharedPref.getTrainerImagePrefs();
 
   @override
   void dispose() {
@@ -143,6 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("------Surendra-------${widget.trainerImage}----------");
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -150,655 +155,492 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 30),
-              CstAppbarWithtextimage(
-                  title: DemoLocalization.of(context)!
-                      .translate('Profile')
-                      .toString(),
-                  //'Profile',
-                  imageAsset: 'assets/images/edit-btn.png',
-                  imageColor:
-                      isDarkMode ? Colors.transparent : FitnessColor.primary,
-                  fontFamily: Fonts.arial,
-                  onImageTap: () {
-                    Get.to(() => const SignOutScreen());
-                  }),
-              const SizedBox(height: 10),
-              Obx(() {
-                return
-                  homeController.profileData.isEmpty || homeController.profileData.first.name == null?
-                  homeController.isLoading1.value
-                    ? const Center(child: CupertinoActivityIndicator())
-                    : homeController.profileData.isEmpty || homeController.profileData.first.name == null
-                    ? Center(
-                            child: CustomText1(
-                                text: DemoLocalization.of(context)!
-                                    .translate('No_data_found')
-                                    .toString(),
-                                fontSize: 4))
-                    : Column(
-                            children: [
-                              Obx(() {
-                                return Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: homeController.profileData.isEmpty
-                                      ? const CupertinoActivityIndicator()
-                                      : (homeController.profileData.first.profileImage == null ||
-                                              homeController.profileData.first.profileImage == ""
-                                          ?  Card(
-                                    color: FitnessColor.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(100),
-                                      side: BorderSide(
-                                        color: Colors.black.withOpacity(0.2),
-                                        width: 1,
-                                      ),
-
-                                    ),
-                                            child: const CircleAvatar(
-                                              backgroundColor: FitnessColor.white,
-                                                radius: 55,
-                                                backgroundImage: AssetImage(
-                                                    "assets/images/no Image.png"),
-                                              ),
-                                          )
-                                          : Card(
-                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(100),
-                                           side: BorderSide(
-                                             color: Colors.black.withOpacity(0.2),
-                                             width: 1,
-                                           ),
-
-                                    ),
-                                            child: CircleAvatar(
-                                              backgroundColor: FitnessColor.white,
-                                                radius: 58,
-                                                backgroundImage: NetworkImage(
-                                                    "https://tfbfitness.com/${homeController.profileData.first.profileImage}"),
-                                              ),
-                                          )),
-                                );
-                              }),
-                              Obx(() {
-                                return CustomText1(
-                                  // text: DemoLocalization.of(context)!.translate('Rahul').toString(),//"Rahul",
-                                  text: homeController
-                                              .profileData.first.name ==
-                                          null
-                                      ? homeController.profileData.first.email
-                                          .toString()
-                                      : homeController
-                                              .profileData.first.name ??
-                                          "",
-                                  fontSize: 5.5,
-                                  color: FitnessColor.colorTextPrimary,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: Fonts.arial,
-                                );
-                              }),
-                            ],
-                          ):
-                  Column(
-                    children: [
-                      Obx(() {
-                        return Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: homeController.profileData.isEmpty
-                              ? const CupertinoActivityIndicator()
-                              : (homeController.profileData.first.profileImage == null ||
-                              homeController.profileData.first.profileImage == ""
-                              ?  Card(
-                            color: FitnessColor.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100),
-                              side: BorderSide(
-                                color: Colors.black.withOpacity(0.2),
-                                width: 1,
-                              ),
-
-                            ),
-                            child: const CircleAvatar(
-                              backgroundColor: FitnessColor.white,
-                              radius: 55,
-                              backgroundImage: AssetImage(
-                                  "assets/images/no Image.png"),
-                            ),
-                          )
-                              : Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(100),
-                              side: BorderSide(
-                                color: Colors.black.withOpacity(0.2),
-                                width: 1,
-                              ),
-
-                            ),
-                            child: CircleAvatar(
-                              backgroundColor: FitnessColor.white,
-                              radius: 58,
-                              backgroundImage: NetworkImage(widget.trainerImage.toString()),
-                            ),
-                          )),
-                        );
+          child: Obx(
+             () {
+              return Column(
+                children: [
+                  const SizedBox(height: 30),
+                  CstAppbarWithtextimage(
+                      title: DemoLocalization.of(context)!
+                          .translate('Profile')
+                          .toString(),
+                      //'Profile',
+                      imageAsset: 'assets/images/edit-btn.png',
+                      imageColor:
+                          isDarkMode ? Colors.transparent : FitnessColor.primary,
+                      fontFamily: Fonts.arial,
+                      onImageTap: () {
+                        Get.to(() => const SignOutScreen());
                       }),
-                      Obx(() {
-                        return CustomText1(
-                          // text: DemoLocalization.of(context)!.translate('Rahul').toString(),//"Rahul",
-                          text: homeController
-                              .profileData.first.name ==
-                              null
-                              ? homeController.profileData.first.email
-                              .toString()
-                              : homeController
-                              .profileData.first.name ??
-                              "",
-                          fontSize: 5.5,
-                          color: FitnessColor.colorTextPrimary,
-                          fontWeight: FontWeight.bold,
+                  const SizedBox(height: 10),
+                  // homeController.isLoadingProfile.value
+                  //     ? const Center(child: CupertinoActivityIndicator())
+                  //     :
+                  // widget.trainerName == null || widget.trainerImage!.isEmpty ?
+                  // Obx(
+                  //    () {
+                  //     return Column(
+                  //       children: [
+                  //         Card(
+                  //           shape: RoundedRectangleBorder(
+                  //             borderRadius: BorderRadius.circular(100),
+                  //             side: BorderSide(
+                  //               color: Colors.black.withOpacity(0.2),
+                  //               width: 1,
+                  //             ),
+                  //
+                  //           ),
+                  //           child: CircleAvatar(
+                  //             backgroundColor: FitnessColor.white,
+                  //             radius: 58,
+                  //             backgroundImage: NetworkImage(
+                  //                 "https://tfbfitness.com${homeController.profileData.first.profileImage}"),
+                  //           ),
+                  //         ),
+                  //         CustomText1(text: homeController.profileData.first.name ?? "", fontSize: 5,fontFamily: Fonts.arial,fontWeight: FontWeight.bold,),
+                  //
+                  //       ],
+                  //     );
+                  //   }
+                  // )
+                  //     :
+                  //     Obx(
+                  //      () {
+                  //         return Column(
+                  //           children: [
+                  //             Card(
+                  //               shape: RoundedRectangleBorder(
+                  //                 borderRadius: BorderRadius.circular(100),
+                  //                 side: BorderSide(
+                  //                   color: Colors.black.withOpacity(0.2),
+                  //                   width: 1,
+                  //                 ),
+                  //
+                  //               ),
+                  //               child: CircleAvatar(
+                  //                 backgroundColor: FitnessColor.white,
+                  //                 radius: 58,
+                  //                 backgroundImage: NetworkImage(
+                  //                     widget.trainerImage ?? ""),
+                  //               ),
+                  //             ),
+                  //             CustomText1(text: widget.trainerName ?? "", fontSize: 5,fontFamily: Fonts.arial,fontWeight: FontWeight.bold,),
+                  //
+                  //           ],
+                  //         );
+                  //       }
+                  //     ),
+                  homeController.isLoadingProfile.value
+                      ? const Center(child: CupertinoActivityIndicator())
+                      :
+                  Obx(() {
+                    // Fetch data
+                    String? profileImage =
+                    homeController.profileData.isNotEmpty ? homeController.profileData.first.profileImage : null;
+                    String? trainerImage = trainerImage1;
+
+                    // Determine which image to display
+                    String imageUrl = (trainerImage != null && trainerImage.isNotEmpty)
+                        ? trainerImage1
+                        : (profileImage != null && profileImage.isNotEmpty)
+                        ? "https://tfbfitness.com$profileImage"
+                        : ""; // Fallback to an empty string
+
+                    // Determine which name to display
+                    String displayName = widget.trainerName?.isNotEmpty == true
+                        ? widget.trainerName!
+                        : (homeController.profileData.isNotEmpty
+                        ? homeController.profileData.first.name ?? ""
+                        : "No Name");
+
+                    return Column(
+                      children: [
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100),
+                            side: BorderSide(
+                              color: Colors.black.withOpacity(0.2),
+                              width: 1,
+                            ),
+                          ),
+                          child: CircleAvatar(
+                            backgroundColor: FitnessColor.white,
+                            radius: 58,
+                            backgroundImage: imageUrl.isNotEmpty
+                                ? NetworkImage(imageUrl)
+                                : null, // Null if no valid image
+                            child: imageUrl.isEmpty
+                                ? const Icon(Icons.person, size: 50, color: Colors.grey)
+                                : null, // Placeholder if no image
+                          ),
+                        ),
+                        CustomText1(
+                          text: displayName,
+                          fontSize: 5, // Adjusted font size for visibility
                           fontFamily: Fonts.arial,
-                        );
-                      }),
-                    ],
-                  );
-              }),
-              Obx(() {
-                return homeController.isLoading2.value
-                    ? myShimmer()
-                    : homeController.videoList.isEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Center(
-                                child: CustomText1(
-                                    text: DemoLocalization.of(context)!
-                                        .translate('No_data_found')
-                                        .toString(),
-                                    fontSize: 4)),
-                          )
-                        : ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: homeController.videoList.length,
-                            itemBuilder: (context, index) {
-                              final item = homeController.videoList[index];
-                              final controller = _controllers.length > index
-                                  ? _controllers[index]
-                                  : null;
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ],
+                    );
+                  }),
 
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 8),
-                                  ValueListenableBuilder(
-                                             valueListenable : controller!,
-                                             builder: (_,value,child) {
-                                               return Stack(
-                                                 alignment: Alignment.center,
-                                                 children: [
 
-                                                   Stack(
-                                                     alignment: Alignment.center,
-                                                     children: [
-                                                       InkWell(
-                                                         onTap:(){
-                                                           if (controller.value.isPlaying) {
-                                                             controller.pause();
-                                                           }
-                                                         },
-                                                         child: SizedBox(
-                                                           height: 180,
-                                                           width: double.infinity,
-                                                           child: Container(
-                                                             decoration: BoxDecoration(
-                                                               border: Border.all(width: 1,color: FitnessColor.colorsociallogintext),
-                                                               borderRadius: BorderRadius.circular(10)
-                                                             ),
-                                                             child: AspectRatio(
-                                                               aspectRatio: controller.value.aspectRatio,
-                                                               child: ClipRRect(
+                  CustomButton(
+                    height: 30,
+                      width: 120,
+                      text: DemoLocalization.of(context)!
+                          .translate('Trainer_details')
+                          .toString(), onPressed: (){
+                    Get.to(()=> const TrainerDetailsScreen());
+                  }, fontFamily: Fonts.arial),
+                  Obx(() {
+                    return homeController.isLoading2.value
+                        ? myShimmer()
+                        : homeController.videoPlanList.isEmpty
+                            ? Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                    child: CustomText1(
+                                        text: DemoLocalization.of(context)!
+                                            .translate('No_data_found')
+                                            .toString(),
+                                        fontSize: 4)),
+                              )
+                            : ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: homeController.videoPlanList.length,
+                                itemBuilder: (context, index) {
+                                  final item = homeController.videoPlanList[index];
+                                  return Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 8),
+                                      CustomText(
+                                        text: item.planType ?? 'No Name',
+                                        fontSize: 4.5,
+                                        color:
+                                        FitnessColor.colortextselectbox,
+                                        fontFamily: Fonts.arial,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      const SizedBox(height: 5),
 
-                                                                 borderRadius: BorderRadius.circular(8),
-                                                                 child: VideoPlayer(controller),
-                                                               ),
-                                                             ),
-                                                           ),
-                                                         ),
-                                                       ),
-
-                                                       if (value.isBuffering || !value.isInitialized)
-                                                         const Center(
-                                                           child: CupertinoActivityIndicator(),
-                                                         )
-                                                       else
-                                                         item.questionId == null ||  item.questionId!.isEmpty ?
-                                                          const Icon(Icons.lock,color: FitnessColor.white,) :
-                                                         Positioned(
-                                                           bottom: 0,
-                                                           left: 0,
-                                                           right: 0,
-                                                           top:0,
-                                                           child: Row(
-                                                             mainAxisAlignment: MainAxisAlignment.center,
-                                                             children: [
-                                                               if(!controller.value.isPlaying )
-                                                               IconButton(
-                                                                 style: IconButton.styleFrom(
-                                                                   foregroundColor: FitnessColor.white,
-                                                                   backgroundColor: FitnessColor.primary.withOpacity(0.7),
-                                                                 ),
-                                                                 icon: const Icon(Icons.play_arrow,),
-                                                                 onPressed: () {
-                                                                   setState(() {
-                                                                       controller.play();
-                                                                   });
-                                                                 },
-                                                               )
-                                                             ],
-                                                           ),
-                                                         ),
-                                                       // Volume Icon in the Top-Right Corner
-                                                       Positioned(
-                                                         top: -5,
-                                                         right: -5,
-                                                         child: Transform.scale(
-                                                           scale:0.7,
-                                                           child: IconButton(
-                                                             style: IconButton.styleFrom(
-                                                               foregroundColor: FitnessColor.white,
-                                                               backgroundColor: FitnessColor.primary.withOpacity(0.2),
-                                                             ),
-                                                             icon: Icon(
-
-                                                               isMuted ? Icons.volume_off : Icons.volume_up,
-                                                               color: Colors.white, // Optional: Color for better visibility
-                                                             ),
-                                                             onPressed: () {
-                                                               setState(() {
-                                                                 isMuted = !isMuted;
-                                                                 controller.setVolume(isMuted ? 0.0 : 1.0);
-                                                               });
-                                                             },
-                                                           ),
-                                                         ),
-                                                       ),
-                                                     ],
-                                                   ),
-
-                                                 ],
-                                               );
-                                             }
-                                           ),
-                              /*    ValueListenableBuilder(
-                                    valueListenable: controller!,
-                                    builder: (_, value, child) {
-                                      return Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          Stack(
-                                            alignment: Alignment.center,
-                                            children: [
-                                              InkWell(
-                                                onTap: () {
-                                                  // Only allow play/pause if video is initialized
-                                                  if (controller.value.isInitialized && controller.value.isPlaying) {
-                                                    controller.pause();
+                                      SizedBox(
+                                        height: 160,
+                                        width: double.infinity,
+                                        child: Stack(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(10),
+                                              child: Image.network(
+                                                item.image ?? "",
+                                                fit: BoxFit.fill,
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  } else {
+                                                    return Center(
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(top: 50),
+                                                        child: myShimmer2(),
+                                                      ),
+                                                    );
                                                   }
                                                 },
-                                                child: SizedBox(
-                                                  height: 180,
-                                                  width: double.infinity,
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(width: 1, color: FitnessColor.colorsociallogintext),
-                                                      borderRadius: BorderRadius.circular(10),
+                                                errorBuilder: (context, error, stackTrace) {
+                                                  return const Center(
+                                                    child: Icon(
+                                                      Icons.error,
+                                                      size: 50,
+                                                      color: Colors.red,
                                                     ),
-                                                    child: AspectRatio(
-                                                      aspectRatio: controller.value.aspectRatio,
-                                                      child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(8),
-                                                        child: controller.value.isInitialized
-                                                            ? VideoPlayer(controller) // Show video if initialized
-                                                            : const Center( // Lock icon if video is not initialized
-                                                          child: Icon(
-                                                            Icons.lock,
-                                                            size: 40,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+                                                  );
+                                                },
                                               ),
-                                              // Show buffering indicator if the video is buffering or not initialized
-                                              if (value.isBuffering || !controller.value.isInitialized)
-                                                const Center(
-                                                  child: CupertinoActivityIndicator(),
-                                                )
-                                              else
-                                                Positioned(
-                                                  bottom: 0,
-                                                  left: 0,
-                                                  right: 0,
-                                                  top: 0,
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                    children: [
-                                                      // Only show the play button if the video is initialized
-                                                      if (controller.value.isInitialized && !controller.value.isPlaying)
-                                                        IconButton(
-                                                          style: IconButton.styleFrom(
-                                                            foregroundColor: FitnessColor.white,
-                                                            backgroundColor: FitnessColor.primary.withOpacity(0.7),
-                                                          ),
-                                                          icon: const Icon(Icons.play_arrow),
-                                                          onPressed: () {
-                                                            setState(() {
-                                                              controller.play(); // Play the video
-                                                            });
-                                                          },
-                                                        ),
-                                                    ],
-                                                  ),
+                                            ),
+
+
+                                           Center(
+                                              child:item.isPlanPurchased == false ? IconButton(
+                                                style: IconButton.styleFrom(
+                                                  foregroundColor: FitnessColor.white,
+                                                  backgroundColor: FitnessColor.primary.withOpacity(0.7),
                                                 ),
-                                              // Volume Icon in the Top-Right Corner
-                                              Positioned(
-                                                top: -5,
-                                                right: -5,
-                                                child: Transform.scale(
-                                                  scale: 0.7,
-                                                  child: IconButton(
-                                                    style: IconButton.styleFrom(
-                                                      foregroundColor: FitnessColor.white,
-                                                      backgroundColor: FitnessColor.primary.withOpacity(0.2),
-                                                    ),
-                                                    icon: Icon(
-                                                      isMuted ? Icons.volume_off : Icons.volume_up,
-                                                      color: Colors.white, // Optional: Color for better visibility
-                                                    ),
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        isMuted = !isMuted;
-                                                        controller.setVolume(isMuted ? 0.0 : 1.0);
-                                                      });
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                               icon: const Icon(Icons.lock), onPressed: () {
+                                                Utils.mySnackBar(title: "Purchase Plan",msg: "Before Purchase Plan");
+
+                                              }, // Icon size
+                                              ):
+
+                                               IconButton(
+                                                 style: IconButton.styleFrom(
+                                                   foregroundColor: FitnessColor.white,
+                                                   backgroundColor: FitnessColor.primary.withOpacity(0.7),
+                                                 ),
+                                                 icon: const Icon(Icons.play_arrow), onPressed: () {
+                                                 Get.to(()=> TrainerMultipleVideoScree(planId:item.id,monthName: item.planType,));
+
+                                               }, // Icon size
+                                               ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          CustomText(
+                                              text: item.planName ?? 'No Data',
+                                              fontSize: 3.5),
+                                          InkWell(
+                                            onTap: (){
+                                              if(item.isPlanPurchased == false)
+                                                {
+                                                  Utils.mySnackBar(title: "Purchase Plan",msg: "Before Purchase Plan");
+                                                }
+                                              else{
+                                                Get.to(()=> TrainerMultipleVideoScree(planId:item.id,monthName: item.planType,));
+
+                                              }
+                                            },
+                                            child: CustomText(
+                                              text: DemoLocalization.of(context)!
+                                                  .translate('View_more_details')
+                                                  .toString(),
+                                              fontSize: 4.0,
+                                              color: FitnessColor.primary,
+                                              fontFamily: Fonts.arial,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ],
-                                      );
-                                    },
-                                  ),*/
+                                      ),
 
-                                  const SizedBox(height: 5),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      CustomText(
-                                        text: item.trainer ?? 'No Name',
-                                        fontSize: 3.5,
-                                        color:
-                                            FitnessColor.colortextselectbox,
-                                        fontFamily: Fonts.arial,
-                                      ),
-                                      InkWell(
-                                        onTap: (){
-                                          Get.to(()=> HomeDetailsScreen(detailsId: item.id.toString()));
-                                        },
-                                        child: CustomText(
-                                          text: DemoLocalization.of(context)!
-                                              .translate('View_more_details')
-                                              .toString(),
-                                          fontSize: 4.0,
-                                          color: FitnessColor.primary,
-                                          fontFamily: Fonts.arial,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
                                     ],
-                                  ),
-                                  CustomText(
-                                      text: item.title ?? 'No Data',
-                                      fontSize: 3.5),
-                                ],
+                                  );
+                                },
                               );
+                  }),
+                  const SizedBox(height: 20),
+                  CustomText1(
+                      text: DemoLocalization.of(context)!
+                          .translate('SubscriptionPlan')
+                          .toString(),
+                      //"Subscription Plan",
+                      fontSize: 8,
+                      color: FitnessColor.colorTextFour,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: Fonts.arial),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: CustomText(
+                        text: DemoLocalization.of(context)!
+                            .translate('Itistext')
+                            .toString(),
+                        fontSize: 4,
+                        color: FitnessColor.colorTextPrimary,
+                        fontWeight: FontWeight.normal,
+                        textAlign: TextAlign.center,
+                        fontFamily: Fonts.arial),
+                  ),
+                  Obx(() {
+                    return SizedBox(
+                      height: 160,
+                      child:
+                      homeController.isLoading2.value
+                          ? myHorizontalShimmer()
+                          : homeController.videoPlanList.isEmpty
+                          ?  Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: CustomText1(text: DemoLocalization.of(context)!
+                              .translate('No_data_found')
+                              .toString(), fontSize: 5),
+                        ),
+                      )
+                          :
+                      ListView.builder(
+                        itemCount: homeController.videoPlanList.length,
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) {
+                          final planList = homeController.videoPlanList[index];
+                          final bool isSelected = index == selectedIndex;
+                          return GestureDetector(
+                            onTap: () {
+                              if(planList.isPlanPurchased == true){
+                                Utils.mySnackBar(title: "Purchased Plan",msg: "Already Purchased");
+                              }
+                              else{
+                                setState(() {
+                                  selectedIndex = index;
+                                  planId = planList.id.toString();
+                                  planPrice = planList.planAmount.toString();
+                                });
+                              }
+
                             },
-                          );
-              }),
-              const SizedBox(height: 20),
-              CustomText1(
-                  text: DemoLocalization.of(context)!
-                      .translate('SubscriptionPlan')
-                      .toString(),
-                  //"Subscription Plan",
-                  fontSize: 8,
-                  color: FitnessColor.colorTextFour,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: Fonts.arial),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: CustomText(
-                    text: DemoLocalization.of(context)!
-                        .translate('Itistext')
-                        .toString(),
-                    fontSize: 4,
-                    color: FitnessColor.colorTextPrimary,
-                    fontWeight: FontWeight.normal,
-                    textAlign: TextAlign.center,
-                    fontFamily: Fonts.arial),
-              ),
-              Obx(() {
-                return homeController.isLoading.value
-                    ? myHorizontalShimmer()
-                    : homeController.planData.isEmpty
-                        ?  Padding(
-                            padding: const EdgeInsets.all(8.0),
                             child: Center(
-                              child: CustomText1(text: DemoLocalization.of(context)!
-                                  .translate('No_data_found')
-                                  .toString(), fontSize: 5),
-                            ),
-                          )
-                        : SizedBox(
-                            height: 160,
-                            child: ListView.builder(
-                              itemCount: homeController.planData.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                final planList =
-                                    homeController.planData[index];
-                                final bool isSelected =
-                                    index == selectedIndex;
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIndex = index;
-                                      planId = planList.id.toString();
-                                      planPrice = planList.price.toString();
-                                    });
-                                  },
-                                  child: Center(
-                                    child: SizedBox(
-                                      // color: Colors.red,
-                                      // width: 110,
-                                      width:
-                                          MediaQuery.of(context).size.width /
-                                              3.25,
-                                      height: 150,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Card(
-                                          margin: const EdgeInsets.symmetric(
-                                              vertical: 10.0),
-                                          color: isSelected
-                                              ? FitnessColor.primaryLite
-                                                  .withOpacity(0.01)
-                                              : FitnessColor.colorinsidebox,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                              side: BorderSide(
-                                                color: isSelected
-                                                    ? FitnessColor.colorsociallogintext
-                                                    : Colors.transparent,
-                                                width: 1.0,
-                                              )),
-                                          elevation: 4,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Container(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                height: 36,
-                                                // color: Colors.grey,
-                                                decoration: BoxDecoration(
-                                                  color: isSelected
-                                                      ? FitnessColor
-                                                          .coloroutlineborder
-                                                      : FitnessColor
-                                                          .colormonthbgcolor
-                                                          .withOpacity(0.30),
-                                                  borderRadius:
-                                                      const BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(10.0),
-                                                    topRight:
-                                                        Radius.circular(10.0),
-                                                  ),
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    "${planList.durationInDays.toString()} Days",
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: isSelected
-                                                          ? FitnessColor
-                                                              .colorinsidebox
-                                                          : FitnessColor
-                                                              .colorfillText,
-                                                      fontFamily: Fonts.arial,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                height: 16,
-                                              ),
-                                              Column(
-                                                children: [
-                                                  Text(
-                                                    planList.name.toString(),
-                                                    style: TextStyle(
-                                                      fontSize: 11,
-                                                      color: isSelected
-                                                          ? FitnessColor.white
-                                                          : (isDarkMode
-                                                              ? FitnessColor
-                                                                  .primary // Dark mode color
-                                                              : FitnessColor
-                                                                  .primary),
-                                                      // Light mode color
-                                                      fontFamily: Fonts.arial,
-                                                      fontWeight:
-                                                          FontWeight.normal,
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    "\$${(double.parse(planList.price ?? '0.0')).toStringAsFixed(0)}",
-                                                    // Prepend $ symbol
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontFamily: Fonts.arial,
-                                                      color: isSelected
-                                                          ? FitnessColor.white
-                                                          : (isDarkMode
-                                                              ? FitnessColor
-                                                                  .primary // Dark mode color
-                                                              : FitnessColor
-                                                                  .primary),
-                                                      // Light mode color
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                    ),
-                                                  ),
-                                                  if (isSelected)
-                                                    Icon(
-                                                      Icons.check_circle,
-                                                      color: isSelected
-                                                          ? FitnessColor.white
-                                                          : (isDarkMode
-                                                              ? FitnessColor
-                                                                  .primary // Dark mode color
-                                                              : FitnessColor
-                                                                  .primary), // Light mode color
-                                                    ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width / 3.25,
+                                height: 150,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Card(
+                                    margin: const EdgeInsets.symmetric(vertical: 10.0),
+                                    color:
+
+                                    isSelected
+                                        ? FitnessColor.primaryLite.withOpacity(0.01)
+                                        : FitnessColor.colorinsidebox,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      side: BorderSide(
+                                        color:
+                                        isSelected
+                                            ? FitnessColor.colorsociallogintext
+                                            : Colors.transparent,
+                                        width: 1.0,
                                       ),
                                     ),
+                                    elevation: 4,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: MediaQuery.of(context).size.width,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            color:
+                                            isSelected
+                                                ? FitnessColor.coloroutlineborder
+                                                : FitnessColor.colormonthbgcolor.withOpacity(0.30),
+                                            borderRadius: const BorderRadius.only(
+                                              topLeft: Radius.circular(10.0),
+                                              topRight: Radius.circular(10.0),
+                                            ),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              planList.planType.toString(),
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: isSelected
+                                                    ? FitnessColor.colorinsidebox
+                                                    : FitnessColor.colorfillText,
+                                                fontFamily: Fonts.arial,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              planList.planName.toString(),
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                color: isSelected
+                                                    ? FitnessColor.white
+                                                    : (isDarkMode
+                                                    ? FitnessColor.primary
+                                                    : FitnessColor.primary),
+                                                fontFamily: Fonts.arial,
+                                                fontWeight: FontWeight.normal,
+                                              ),
+                                            ),
+                                            Text(
+                                              "\$${(double.parse(planList.planAmount ?? '0.0')).toStringAsFixed(0)}",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: Fonts.arial,
+                                                color: isSelected
+                                                    ? FitnessColor.white
+                                                    : (isDarkMode
+                                                    ? FitnessColor.primary
+                                                    : FitnessColor.primary),
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                            // if (isSelected)
+                                            //   Icon(
+                                            //     Icons.check_circle,
+                                            //     color: isSelected
+                                            //         ? FitnessColor.white
+                                            //         : (isDarkMode
+                                            //         ? FitnessColor.primary
+                                            //         : FitnessColor.primary),
+                                            //   ),
+                                            planList.isPlanPurchased == true ?
+                                                const Text("Purchased",style: TextStyle(fontSize: 15,color: Colors.green,fontFamily: Fonts.arial),)
+                                             // CustomText1(text: "Purchased", fontSize: 4,color: Colors.green,)
+                                                :const SizedBox(),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                );
-                                // );
-                              },
+                                ),
+                              ),
                             ),
                           );
-              }),
-              Center(
-                child: CustomButton(
-                  text: DemoLocalization.of(context)!
-                      .translate('MakePayment')
-                      .toString(),
-                  //'Make Payment',
-                  fontFamily: Fonts.arial,
-                  fontSize: 22,
-                  color: FitnessColor.colorTextThird,
-                  onPressed: () async {
-                    if(planPrice == null){
-                      Utils.mySnackBar(title:DemoLocalization.of(context)!.translate('Select_Plan').toString(),msg:DemoLocalization.of(context)!.translate('Please_Select_Plan').toString());
-                    }else{
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                      String? userId = prefs.getString("userId");
-                      if(userId == null || userId == ''){
-                        Get.to(()=> const LoginScreen());
-                      }else {
-                        homeController.purchasePlanApi(planId, planPrice);
+                        },
+                      ),
+                    );
 
-                      }
+                  }),
+                  Center(
+                    child: CustomButton(
+                      text: DemoLocalization.of(context)!
+                          .translate('MakePayment')
+                          .toString(),
+                      //'Make Payment',
+                      fontFamily: Fonts.arial,
+                      fontSize: 22,
+                      color: FitnessColor.colorTextThird,
+                      onPressed: () async {
+                        if(planPrice == null){
+                          Utils.mySnackBar(title:DemoLocalization.of(context)!.translate('Select_Plan').toString(),msg:DemoLocalization.of(context)!.translate('Please_Select_Plan').toString());
+                        }else{
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          String? userId = prefs.getString("userId");
+                          if(userId == null || userId == ''){
+                            Get.to(()=> const LoginScreen());
+                            Get.delete<HomeController>();
+                          }else {
+                            //if()
+                            homeController.purchasePlanApi(planId, planPrice);
+
+                          }
 
 
-                    }
+                        }
 
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: CustomText(
-                    text: DemoLocalization.of(context)!
-                        .translate('webringtext')
-                        .toString(),
-                    //  "We bring the most deserving ones to flattery with just a hate payment of \$199 those who are softened and corrupted by present pleasures",
-                    fontSize: 3,
-                    color: FitnessColor.coloroutlineborder,
-                    fontWeight: FontWeight.normal,
-                    textAlign: TextAlign.center,
-                    fontFamily: Fonts.arial //Fonts.arial,
+                      },
                     ),
-              ),
-            ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: CustomText(
+                        text: DemoLocalization.of(context)!
+                            .translate('webringtext')
+                            .toString(),
+                        //  "We bring the most deserving ones to flattery with just a hate payment of \$199 those who are softened and corrupted by present pleasures",
+                        fontSize: 3,
+                        color: FitnessColor.coloroutlineborder,
+                        fontWeight: FontWeight.normal,
+                        textAlign: TextAlign.center,
+                        fontFamily: Fonts.arial //Fonts.arial,
+                        ),
+                  ),
+                ],
+              );
+            }
           ),
         ),
       ),

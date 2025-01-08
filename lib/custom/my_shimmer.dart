@@ -48,6 +48,65 @@ Widget myShimmer({double height = 80}) {
   );
 }
 
+Widget myShimmer1({double height = 40}) {
+  return SafeArea(
+    child: Builder(
+      builder: (context) {
+        final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+        final baseColor = isDarkMode ? FitnessColor.primary.withOpacity(0.4) : FitnessColor.primary.withOpacity(0.4);
+        final highlightColor = isDarkMode ? FitnessColor.white.withOpacity(0.4) : FitnessColor.white.withOpacity(0.4);
+
+        return Shimmer.fromColors(
+          baseColor: baseColor,
+          highlightColor: highlightColor,
+          enabled: true,
+          child: ListView.builder(
+            padding: const EdgeInsets.only(top: 10),
+            itemCount: 2,
+            shrinkWrap: true,
+            itemBuilder: (context, index) => Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+                  margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+                  height: height,
+                  width: 120,
+                  decoration: BoxDecoration(
+                    color: baseColor, // Match container background with baseColor
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    ),
+  );
+}
+
+Widget myShimmer2() {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+
+      const SizedBox(height: 10),
+      Shimmer.fromColors(
+        baseColor: Colors.grey.shade300,
+        highlightColor: Colors.black,
+        child: Text(
+          "Loading...",
+          style: TextStyle(
+            fontSize: 16,
+            color: Colors.black,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
 
 Widget myHorizontalShimmer({double height = 80, double width = 150}) {
   return Shimmer.fromColors(
@@ -72,7 +131,7 @@ Widget myHorizontalShimmer({double height = 80, double width = 150}) {
 }
 
 // Shimmer loader widget
-Widget imageLoaderShimmer({double height = 30.0, double width = double.infinity}) {
+Widget imageLoaderShimmer({double height = 2.0, double width = double.infinity}) {
   return SafeArea(
     child: Builder(
       builder: (context) {
@@ -84,12 +143,12 @@ Widget imageLoaderShimmer({double height = 30.0, double width = double.infinity}
         return Shimmer.fromColors(
           baseColor: baseColor,
           highlightColor: highlightColor,
-          enabled: true, // Set this to false if you want to disable shimmer effect
+          enabled: true,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
             margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
             height: height,
-            width: width, // Use width as you need, it's set to infinity by default
+            width: width,
             decoration: BoxDecoration(
               color: baseColor,
               borderRadius: BorderRadius.circular(30),
@@ -132,22 +191,22 @@ Widget imageLoaderShimmer({double height = 30.0, double width = double.infinity}
 Widget myShimmerGrid({double ratio = 1}) {
   return SafeArea(
     child: Shimmer.fromColors(
-      baseColor:  FitnessColor.primary.withOpacity(0.4),
-      highlightColor:  FitnessColor.primary.withOpacity(0.2),
+      baseColor: FitnessColor.primary.withOpacity(0.4),
+      highlightColor: FitnessColor.primary.withOpacity(0.2),
       enabled: true,
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          crossAxisSpacing: 4.0,
-          mainAxisSpacing: 4.0,
-          childAspectRatio: 0.72,
+          mainAxisSpacing: 5.0,
+          crossAxisSpacing: 5.0,
+          childAspectRatio: 2.5 / 3.0,
         ),
         itemCount: 4,
         itemBuilder: (context, index) => Container(
           decoration: BoxDecoration(
-            color:  FitnessColor.primary,
+            color: FitnessColor.primary,
             borderRadius: BorderRadius.circular(15),
           ),
         ),
@@ -155,6 +214,7 @@ Widget myShimmerGrid({double ratio = 1}) {
     ),
   );
 }
+
 
 Widget myObjectShimmer(
     {double height = 80,

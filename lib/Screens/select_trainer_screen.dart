@@ -1,12 +1,14 @@
 import 'package:fitness/Controllers/Question%20Controller/question_controller.dart';
 import 'package:fitness/Screens/home_screen.dart';
 import 'package:fitness/Screens/home_screen1.dart';
+import 'package:fitness/Utils/utils.dart';
 import 'package:fitness/colors.dart';
 import 'package:fitness/custom/CstAppbarWithtextimage.dart';
 import 'package:fitness/custom/CustomText.dart';
 import 'package:fitness/custom/Fonts.dart';
 import 'package:fitness/custom/my_shimmer.dart';
 import 'package:fitness/utils/Demo_Localization.dart';
+import 'package:fitness/utils/shared_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,7 +28,10 @@ class _SelectTrainerScreenState extends State<SelectTrainerScreen> {
   @override
   void initState() {
     super.initState();
-    questionController.getTrainerApi();
+    get();
+  }
+  get() async {
+    await questionController.getTrainerApi();
   }
 
   @override
@@ -90,6 +95,8 @@ class _SelectTrainerScreenState extends State<SelectTrainerScreen> {
                       var item = questionController.trainerList[index];
                       return InkWell(
                         onTap:(){
+                          SharedPref.setTrainerIdPrefs(item.id.toString());
+                          SharedPref.setTrainerImagePrefs(item.profileImage.toString());
                           Get.to(()=> HomeScreen(trainerName:item.title,trainerImage: item.profileImage,trainerId: item.id,));
                         },
                         child: Card(
@@ -110,22 +117,32 @@ class _SelectTrainerScreenState extends State<SelectTrainerScreen> {
                                       fit: BoxFit.fill,
                                       width: double.infinity,
                                       height: 120,
-                                      loadingBuilder: (context, child, loadingProgress) {
+                                      loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                                         if (loadingProgress == null) {
                                           return child;
                                         } else {
-                                          return imageLoaderShimmer();
+                                          return Center(
+                                            child:
+                                              CupertinoActivityIndicator()
+                                            // CircularProgressIndicator(
+                                            //   value: loadingProgress.expectedTotalBytes != null
+                                            //       ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                            //       : null,
+                                            //
+                                            // ),
+                                          );
                                         }
                                       },
+
                                     ),
                                   ),
                                 ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: CustomText(
+                                child: CustomText1(
                                   text: item.title ?? "",
-                                  fontSize: 4.5,
+                                  fontSize: 3.5,
                                   fontFamily: Fonts.arial,
                                 ),
                               ),

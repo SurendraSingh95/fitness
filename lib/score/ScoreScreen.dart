@@ -106,6 +106,10 @@
 //   }
 // }
 import 'package:fitness/PurChaseProgram/StartNowSecond.dart';
+import 'package:fitness/custom/CustomButton.dart';
+import 'package:fitness/custom/CustomText.dart';
+import 'package:fitness/custom/Fonts.dart';
+import 'package:fitness/utils/Demo_Localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -175,14 +179,20 @@ class _ExactScoreTableUIState extends State<ExactScoreTableUI> {
         title: const Text("Priority Score Table",style: TextStyle(fontSize: 15)),
         centerTitle: true,
        actions: [
-         InkWell(
-           onTap: (){
+         Padding(
+           padding: const EdgeInsets.only(right: 10),
+           child: CustomButton(
+             width: 60,
+               height: 30,
+               text: DemoLocalization.of(context)!
+               .translate('Next')
+               .toString(), onPressed: (){
              Get.to(()=>const StartNowSecond());
-           },
-             child: const Padding(
-               padding: EdgeInsets.only(right: 10),
-               child: Text("Next",style: TextStyle(fontSize: 15),),
-             ))
+
+           }, fontFamily: Fonts.arial),
+         )
+
+
        ],
        // backgroundColor: Colors.green,
       ),

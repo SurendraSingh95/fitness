@@ -100,8 +100,8 @@ class _MyAppState extends State<MyApp> {
       darkTheme: AppThemes.darkTheme,
       themeMode: themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
       debugShowCheckedModeBanner: false,
-     home: const SelectTrainerScreen(),
-     // home: const SplashScreen(),
+    // home: const SelectTrainerScreen(),
+     home: const SplashScreen(),
     );
   }
 }

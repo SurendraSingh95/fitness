@@ -7,6 +7,9 @@ import 'dart:io';
 import 'package:fitness/Api%20Services1/api_helper_methods.dart';
 import 'package:fitness/Api%20Services1/api_services.dart';
 import 'package:fitness/Controllers/Auth%20Controllers/login_controller.dart';
+import 'package:fitness/Model/Trainer%20Model/get_trainer_all_video_model.dart';
+import 'package:fitness/Model/Trainer%20Model/get_trainer_details_model.dart';
+import 'package:fitness/Model/Trainer%20Model/get_trainer_video_model.dart';
 import 'package:fitness/Model/get_details_model.dart';
 import 'package:fitness/Model/get_member_ship_plan_model.dart';
 import 'package:fitness/Model/get_my_plan.dart';
@@ -31,6 +34,7 @@ class HomeController extends GetxController {
    /// get user id
    String get _userId => SharedPref.getUserId();
    String get languageCode => SharedPref.getLanguageToPrefs();
+   String get trainerId => SharedPref.getTrainerToPrefs();
    String get userLoginId => SharedPref.getUserLoginId();
 
 
@@ -40,7 +44,9 @@ class HomeController extends GetxController {
    ///declaration of variables
    RxBool isLoading = false.obs;
    RxBool isLoading1 = false.obs;
+   RxBool isLoadingProfile = false.obs;
    RxBool isLoading2 = false.obs;
+   RxBool isLoadingVideo = false.obs;
    RxBool isLoadingDetails = false.obs;
    RxInt sliderIndex = 0.obs;
    var passwordVisible = false.obs;
@@ -63,19 +69,28 @@ class HomeController extends GetxController {
    String get purchasePlanURL => apiServices.purchasePlan;
    String get deleteAccountURL => apiServices.deleteAccount;
    String get homeDetailsURL => apiServices.homeDetails;
+   String get trainerWisePlanURL => apiServices.trainerWisePlan;
+   String get trainerDetailsURL => apiServices.trainerDetails;
 
    String get userId => _userId;
 
    ///home data lists
    RxList<ProfileData> profileData = <ProfileData>[].obs;
    RxList<PlanData> planData = <PlanData>[].obs;
-   RxList<VideoList> videoList = <VideoList>[].obs;
+   RxList<TrainerVideoList> trainerVideoList = <TrainerVideoList>[].obs;
    RxList<UserList> userList = <UserList>[].obs;
    RxList<DetailsData> detailsData = <DetailsData>[].obs;
 
+
+   /// plan api
+   RxList<VideoPlanList> videoPlanList = <VideoPlanList>[].obs;
+   /// trainer details
+   RxList<TarinerData> tarinerData = <TarinerData>[].obs;
+
    ///get profile  api
    getProfileApi() async {
-      isLoading1.value = true;
+      print("------Surendra-----------------");
+      isLoadingProfile.value = true;
       try {
          dynamic response = await apiBaseHelper.postAPICall(Uri.parse(profileURl),langCode:languageCode.toString() , {"user_id":userId.toString()});
          profileData.value = GetProfileModel.fromJson(response).data!;
@@ -85,7 +100,7 @@ class HomeController extends GetxController {
             nameController.text = profileData.value.first.name ?? '';
             phoneController.text = profileData.value.first.phone ?? '';
             emailController.text = profileData.value.first.email ?? '';
-            isLoading1.value = false;
+            isLoadingProfile.value = false;
          } else {
             Utils.mySnackBar(
                 title: 'Something went wrong',
@@ -107,19 +122,12 @@ class HomeController extends GetxController {
       isLoading.value = false;
    }
 
-   ///get all banner images
- /*  getVideoList() async {
-      isLoading2.value = true;
-      dynamic response = await apiBaseHelper.getAPICall(Uri.parse(getVideoURL),langCode:languageCode.toString());
-      videoList.value = GetVideoModel.fromJson(response).data;
-      isLoading2.value = false;
-   }*/
-
-   getVideoList() async {
-      isLoading2.value = true;
-      dynamic response = await apiBaseHelper.postAPICall(Uri.parse(getVideoURL),langCode:languageCode.toString(),{"question_id":""});
-      videoList.value = GetVideoModel.fromJson(response).data;
-      isLoading2.value = false;
+   ///get trainer all video
+   getVideoList(String? planId) async {
+    isLoadingVideo.value = true;
+      dynamic response = await apiBaseHelper.postAPICall(Uri.parse(getVideoURL),langCode:languageCode.toString(),{"plan_id":planId});
+      trainerVideoList.value = GetTrainerVideoListModel.fromJson(response).data;
+      isLoadingVideo.value = false;
 
    }
 
@@ -173,6 +181,7 @@ class HomeController extends GetxController {
 
    /// plan purchase api
    purchasePlanApi(String? planId,amount) async {
+
       try {
          Utils.showLoader();
          final response = await apiBaseHelper.postAPICall(Uri.parse(purchasePlanURL),langCode:languageCode.toString() ,  {
@@ -189,6 +198,8 @@ class HomeController extends GetxController {
             );
          } else {
             Utils.mySnackBar(title: "Success", msg:response["message"]);
+            trainerWisePlanApi();
+
          }
       } catch (error) {
          Get.back();
@@ -246,6 +257,25 @@ class HomeController extends GetxController {
       isLoading1.value = false;
 
    }
+
+
+   ///get trainer Wise Plan Api
+   trainerWisePlanApi() async {
+      isLoading2.value = true;
+      dynamic response = await apiBaseHelper.postAPICall(Uri.parse(trainerWisePlanURL),langCode:languageCode.toString(),{"user_id":userId.toString(),"trainer_id":trainerId.toString()});
+      videoPlanList.value = GetVideoPlanModel.fromJson(response).data;
+      isLoading2.value = false;
+   }
+
+
+   ///get trainer details Api
+   trainerDetailsApi() async {
+      isLoading2.value = true;
+      dynamic response = await apiBaseHelper.postAPICall(Uri.parse(trainerDetailsURL),langCode:languageCode.toString(),{"trainer_id":trainerId.toString()});
+      tarinerData.value = GetTrainerDetailsModel.fromJson(response).data;
+      isLoading2.value = false;
+   }
+
 
    /// home Details Api
    homeDetailsApi(String?id) async {

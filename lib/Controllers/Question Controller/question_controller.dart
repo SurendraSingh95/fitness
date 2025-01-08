@@ -52,11 +52,16 @@ class QuestionController extends GetxController {
 
    ///get trainer list
    getTrainerApi() async {
-      isLoading.value = true;
-      dynamic response = await apiBaseHelper.getAPICall(Uri.parse(getTrainerURL),langCode:languageCode.toString());
-      trainerList.value = GetTrainerModel.fromJson(response).data;
-   print("axssadas${trainerList.value.length}");
-   print("sdadadas${trainerList.value.first.title}");
+    await Future.delayed(Duration.zero);
+      try {
+        isLoading.value = true;
+        dynamic response = await apiBaseHelper.getAPICall(Uri.parse(getTrainerURL),langCode:languageCode.toString());
+        trainerList.value = GetTrainerModel.fromJson(response).data;
+        print("sdadadas${trainerList.value.first.title}");
+      } on Exception catch (e) {
+         print("axssadas$e");
+      }
+
       isLoading.value = false;
    }
 

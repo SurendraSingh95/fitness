@@ -8,6 +8,7 @@ import 'package:fitness/custom/Fonts.dart';
 import 'package:fitness/custom/my_shimmer.dart';
 import 'package:fitness/score/ScoreScreen.dart';
 import 'package:fitness/utils/Demo_Localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -454,7 +455,7 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
                               if (loadingProgress == null) {
                                 return child;
                               } else {
-                                return imageLoaderShimmer();
+                                return const CupertinoActivityIndicator(color: FitnessColor.white,);
                               }
                             },
                           ),
@@ -477,7 +478,7 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Padding(
-                              padding: const EdgeInsets.all(0.0),
+                              padding: const EdgeInsets.only(right: 0),
                               child: Image.network(
                                 "https://tfbfitness.com/${answer.value!.image}",
                                 fit: BoxFit.cover,
@@ -485,7 +486,7 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
                                   if (loadingProgress == null) {
                                     return child;
                                   } else {
-                                    return imageLoaderShimmer();
+                                    return   const CupertinoActivityIndicator(color: FitnessColor.white,);
                                   }
                                 },
                               ),
