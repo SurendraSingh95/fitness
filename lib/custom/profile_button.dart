@@ -38,7 +38,7 @@ class CustomContainer extends StatelessWidget {
           height: height,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: backgroundColor ?? (isDarkMode ?  FitnessColor.white.withOpacity(0.2) : Colors.white), // Dynamic background color
+            color: backgroundColor ?? (isDarkMode ?  FitnessColor.colorView.withOpacity(0.0) : FitnessColor.white), // Dynamic background color
             borderRadius: borderRadius,
             border: Border.all(
               color: isDarkMode

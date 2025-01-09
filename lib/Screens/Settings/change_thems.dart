@@ -14,7 +14,10 @@ class ChangeThemesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
+      backgroundColor: isDarkMode ? FitnessColor.primary : FitnessColor.white,
 
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -35,7 +38,7 @@ class ChangeThemesScreen extends StatelessWidget {
                   text: DemoLocalization.of(context)!
                       .translate('CHOOSE_THEME')
                       .toString(),
-                  fontSize: 3.5,
+                  fontSize: 4.5,
                   color: FitnessColor.primary,
                   fontFamily: Fonts.arial,
                   fontWeight: FontWeight.bold,
@@ -47,7 +50,7 @@ class ChangeThemesScreen extends StatelessWidget {
               text: DemoLocalization.of(context)!
                   .translate('CHOOSE_THEME')
                   .toString(),
-              fontSize: 3.5,
+              fontSize: 4.5,
               color: FitnessColor.primary,
               fontFamily: Fonts.arial,
               fontWeight: FontWeight.bold,
@@ -56,6 +59,7 @@ class ChangeThemesScreen extends StatelessWidget {
             const SizedBox(height: 20),
             Obx(
                   () => Card(
+                    color: isDarkMode ?  FitnessColor.colorsociallogintext : FitnessColor.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0),
                 ),

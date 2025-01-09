@@ -46,8 +46,8 @@ class Utils {
       duration: duration,
       borderColor: isDarkMode? FitnessColor.white: FitnessColor.primary,
       borderWidth: 1,  // Set border width
-      colorText:  isDarkMode? FitnessColor.white: FitnessColor.primary,
-      backgroundColor: isDarkMode? FitnessColor.primary: FitnessColor.white,
+      colorText:  isDarkMode? FitnessColor.primary: FitnessColor.white,
+      backgroundColor: isDarkMode? FitnessColor.white: FitnessColor.colorsociallogintext,
       titleText: title == "" ? const SizedBox() : null,
       messageText: msg == '' ? const SizedBox() : null,
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -73,6 +73,7 @@ class Utils {
           Get.back(result: false);
         },
         fontFamily: Fonts.arial,
+          fontSize: 20,
       ),
       confirm: CustomButton(
         width: 50,
@@ -81,6 +82,7 @@ class Utils {
           Get.back(result: true);
         },
         fontFamily: Fonts.arial,
+        fontSize: 20,
       ),
       // Adding a border to the dialog
       buttonColor: FitnessColor.primary, // Set color of buttons

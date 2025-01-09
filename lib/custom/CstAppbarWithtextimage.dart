@@ -1,3 +1,4 @@
+import 'package:fitness/utils/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import '../colors.dart';
 
@@ -22,9 +23,11 @@ class CstAppbarWithtextimage extends StatelessWidget {
     this.textColor,  // Optional text color
     this.imageColor, // Optional image color (tint)
   }) : super(key: key);
+  String get userId => SharedPref.getUserId();
 
   @override
   Widget build(BuildContext context) {
+
     bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
 
@@ -65,7 +68,7 @@ class CstAppbarWithtextimage extends StatelessWidget {
               ? SizedBox(
             width: 24,
             height: 24,
-            child: Image.asset(
+            child: userId == null || userId.isEmpty ? const SizedBox.shrink():  Image.asset(
               imageAsset!,
               width: 24,
               height: 24,

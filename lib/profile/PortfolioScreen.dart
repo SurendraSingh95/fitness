@@ -113,22 +113,30 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                         }
                     ),
                     const SizedBox(height: 20),
-                    SizedBox(
-                      width: 120,
-                      height: 120,
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: trainerImage.isNotEmpty
-                            ? NetworkImage(
-                            trainerImage.toString())
-                            : const AssetImage(
-                            'assets/images/no Image.png')
-                        as ImageProvider,
+                    Card(
+
+                      color: FitnessColor.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100),
+                        side: BorderSide(color: FitnessColor.colorsociallogintext.withOpacity(0.1))
+                      ),
+                      child: SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundImage: trainerImage.isNotEmpty
+                              ? NetworkImage(
+                              trainerImage.toString())
+                              : const AssetImage(
+                              'assets/images/no Image.png')
+                          as ImageProvider,
+                        ),
                       ),
                     ),
-                    SizedBox(height: 10,),
-                    CustomText1(text: homeController.tarinerData.first.title ?? "", fontSize: 5),
-                    SizedBox(height: 10,),
+                    const SizedBox(height: 10,),
+                    CustomText1(text: homeController.tarinerData.first.title ?? "", fontSize: 5,fontWeight: FontWeight.bold,fontFamily: Fonts.arial),
+                    const SizedBox(height: 10,),
 
                     SizedBox(
                       height: 170,
@@ -138,43 +146,32 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                               ListView.builder(
                                 physics: const ScrollPhysics(),
                                 scrollDirection: Axis.horizontal,
-                                itemCount:homeController.tarinerData.first.images.length,
+                                itemCount:3,
                                 itemBuilder: (context, index) {
                                   final item = homeController.tarinerData.first.images[index];
 
-                                  return Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 10),
-                                      Card(
-                                        elevation: 0,
-                                        shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10)
-                                        ),
-                                        child: ClipRRect(
+                                  return  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Stack(
+                                      children: [
+                                        ClipRRect(
                                           borderRadius: BorderRadius.circular(10),
-                                            child: Image.network(item,fit: BoxFit.fill,height: 150,width: 100,
-                                              loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                                                if (loadingProgress == null) {
-                                                  return child;
-                                                } else {
-                                                  return Center(
-                                                      child:
-                                                      CupertinoActivityIndicator()
-                                                    // CircularProgressIndicator(
-                                                    //   value: loadingProgress.expectedTotalBytes != null
-                                                    //       ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                                    //       : null,
-                                                    //
-                                                    // ),
-                                                  );
-                                                }
-                                              },
-
-                                            )
+                                          child: Image.network(
+                                            item,
+                                            fit: BoxFit.fill,
+                                            height: 150,
+                                            width: 100,
+                                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                              if (loadingProgress == null) {
+                                                return child;
+                                              } else {
+                                                return const Center(child: CupertinoActivityIndicator());
+                                              }
+                                            },
+                                          ),
                                         ),
-                                      )
-                                    ],
+                                      ],
+                                    ),
                                   );
                                 },
                               );
@@ -191,11 +188,9 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                             ListView.builder(
                             physics: const ScrollPhysics(),
                             scrollDirection: Axis.horizontal,
-                            itemCount:homeController.tarinerData.length,
+                            itemCount:homeController.tarinerData.first.videos.length,
                             itemBuilder: (context, index) {
-                              final item = homeController.tarinerData[index];
                               final controller = _controllers.length > index ? _controllers[index] : null;
-
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -301,6 +296,47 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
                         }
                       ),
                     ),
+                    const SizedBox(height: 10,),
+                    SizedBox(
+                      height: 170,
+                      child: Obx(
+                         () {
+                          return ListView.builder(
+                            physics: const ScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: homeController.tarinerData.first.images.length - 3,
+                            itemBuilder: (context, index) {
+                              final item = homeController.tarinerData.first.images[index + 3];
+                              return Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.network(
+                                        item,
+                                        fit: BoxFit.fill,
+                                        height: 150,
+                                        width: 100,
+                                        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          } else {
+                                            return const Center(child: CupertinoActivityIndicator());
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        }
+                      ),
+                    ),
+
+
 
                     Center(
                       child: CustomButton(

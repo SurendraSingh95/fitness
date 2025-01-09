@@ -180,7 +180,7 @@ class _SignOutScreenState extends State<SignOutScreen> {
                       children: [
                         CustomText(
                           textAlign: TextAlign.center,
-                          text:   DemoLocalization.of(context)!
+                          text:  DemoLocalization.of(context)!
                                   .translate('JoinedAug')
                                   .toString() +
                               ' ${DateFormat('dd-MMM-yyyy').format(DateTime.parse(homeController.profileData.first.createdAt.toString()))}',
@@ -196,8 +196,7 @@ class _SignOutScreenState extends State<SignOutScreen> {
                     ),
                     Card(
                       color: isDarkMode
-                          ? FitnessColor.white.withOpacity(0.2)
-                          : FitnessColor.white,
+                          ?  FitnessColor.colorView.withOpacity(0.0) : FitnessColor.white,
                       // Dynamic card background color
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
@@ -315,9 +314,8 @@ class _SignOutScreenState extends State<SignOutScreen> {
                       height: 5,
                     ),
                     Card(
-                      color: isDarkMode
-                          ? FitnessColor.white.withOpacity(0.2)
-                          : FitnessColor.white,
+                      color: isDarkMode?
+                        FitnessColor.colorView.withOpacity(0.0) : FitnessColor.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                         side: BorderSide(
@@ -639,12 +637,8 @@ class _SignOutScreenState extends State<SignOutScreen> {
                       // Example icon
                       onTap: () async {
                         bool confirmDelete = await Utils.showConfirmDialog(
-                            DemoLocalization.of(context)!
-                                .translate('DeleteAccount')
-                                .toString(),
-                            DemoLocalization.of(context)!
-                                .translate('DELETE_USER')
-                                .toString(),
+                            DemoLocalization.of(context)!.translate('DeleteAccount').toString(),
+                            DemoLocalization.of(context)!.translate('DELETE_USER').toString(),
                             context);
                         if (confirmDelete) {
                           homeController.deleteAccountApi();

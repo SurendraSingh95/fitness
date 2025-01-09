@@ -38,7 +38,9 @@ class CustomButton extends StatelessWidget {
       onTap: onPressed,
       child: Card(
         shape: RoundedRectangleBorder(
-            side: const BorderSide(color: Colors.white),
+            side:  BorderSide(color: isDarkMode
+                ? FitnessColor.white.withOpacity(0.4)
+                : FitnessColor.white),
             borderRadius: BorderRadius.circular(10)
         ),
         elevation:5 ,
@@ -46,8 +48,9 @@ class CustomButton extends StatelessWidget {
           height: buttonHeight,
           width: buttonWidth,
           decoration: BoxDecoration(
-            color:  (isDarkMode ?  FitnessColor.white.withOpacity(0.2) : FitnessColor.primary),
+            color:  (isDarkMode ?  FitnessColor.colorView.withOpacity(0.0) : FitnessColor.primary),
             borderRadius: BorderRadius.circular(borderRadius),
+
           ),
           child: Center(
             child: Text(

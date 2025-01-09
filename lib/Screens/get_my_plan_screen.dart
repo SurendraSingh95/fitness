@@ -1,4 +1,5 @@
 import 'package:fitness/Controllers/HomeController/home_controller.dart';
+import 'package:fitness/colors.dart';
 import 'package:fitness/custom/CstAppbarWithtextimage.dart';
 import 'package:fitness/custom/CustomText.dart';
 import 'package:fitness/custom/my_shimmer.dart';
@@ -26,6 +27,8 @@ class _MyPlanListState extends State<MyPlanList> {
   }
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return RefreshIndicator(
       onRefresh: ()async{
         homeController.myPlanApi();
@@ -34,7 +37,9 @@ class _MyPlanListState extends State<MyPlanList> {
         });
       },
       child: Scaffold(
-        body: ListView(
+          backgroundColor: isDarkMode ? FitnessColor.colorsociallogintext.withOpacity(0.4) : FitnessColor.white,
+
+          body: ListView(
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 16.0, right: 16, top: 16),
