@@ -269,139 +269,140 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemBuilder: (context, index) {
                               final item = homeController.videoPlanList[index];
                               return Card(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 8),
-                                    CustomText(
-                                      text: item.planType ?? 'No Name',
-                                      fontSize: 5.5,
-                                      color: FitnessColor.colortextselectbox,
-                                      fontFamily: Fonts.arial,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    const SizedBox(height: 5),
-                                    SizedBox(
-                                      height: 160,
-                                      width: double.infinity,
-                                      child: Stack(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            child: Image.network(
-                                              item.image ?? "",
-                                              fit: BoxFit.fill,
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                              loadingBuilder:
-                                                  (BuildContext context,
-                                                      Widget child,
-                                                      ImageChunkEvent?
-                                                          loadingProgress) {
-                                                if (loadingProgress == null) {
-                                                  return child;
-                                                } else {
-                                                  return Center(
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 50),
-                                                      child: myShimmer2(),
+                                     color: FitnessColor.white,
+                                elevation: 4,
+                                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // Plan Type Title
+                                      CustomText(
+                                        text: item.planType ?? 'No Name',
+                                        fontSize: 5.5,
+                                        color: FitnessColor.colortextselectbox,
+                                        fontFamily: Fonts.arial,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      const SizedBox(height: 8),
+
+                                      // Image Section with Lock/Play Button
+                                      SizedBox(
+                                        height: 160,
+                                        width: double.infinity,
+                                        child: Stack(
+                                          children: [
+                                            // Background Image
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(10),
+                                              child: Image.network(
+                                                item.image ?? "",
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                loadingBuilder: (context, child, loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  } else {
+                                                    return Center(
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(top: 50),
+                                                        child: myShimmer2(),
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                                errorBuilder: (context, error, stackTrace) {
+                                                  return const Center(
+                                                    child: Icon(
+                                                      Icons.error,
+                                                      size: 50,
+                                                      color: Colors.red,
                                                     ),
                                                   );
-                                                }
-                                              },
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return const Center(
-                                                  child: Icon(
-                                                    Icons.error,
-                                                    size: 50,
-                                                    color: Colors.red,
-                                                  ),
-                                                );
-                                              },
+                                                },
+                                              ),
+                                            ),
+                                            // Center Lock/Play Button
+                                            Center(
+                                              child: IconButton(
+                                                style: IconButton.styleFrom(
+                                                  foregroundColor: FitnessColor.white,
+                                                  backgroundColor: FitnessColor.primary.withOpacity(0.7),
+                                                ),
+                                                icon: Icon(
+                                                  item.isPlanPurchased == false
+                                                      ? Icons.lock
+                                                      : Icons.play_arrow,
+                                                ),
+                                                onPressed: () {
+                                                  if (item.isPlanPurchased == false) {
+                                                    Utils.mySnackBar(
+                                                      title: "Purchase Plan",
+                                                      msg: "Before Purchase Plan",
+                                                    );
+                                                  } else {
+                                                    Get.to(() => TrainerMultipleVideoScree(
+                                                      planId: item.id,
+                                                      monthName: item.planType,
+                                                    ));
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 12),
+
+                                      // Plan Name and "View More Details" Button
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          // Plan Name
+                                          Flexible(
+                                            child: CustomText(
+                                              text: item.planName ?? 'No Data',
+                                              fontSize: 4.0,
+                                              fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                          Center(
-                                            child: item.isPlanPurchased == false
-                                                ? IconButton(
-                                                    style: IconButton.styleFrom(
-                                                      foregroundColor:
-                                                          FitnessColor.white,
-                                                      backgroundColor:
-                                                          FitnessColor.primary
-                                                              .withOpacity(0.7),
-                                                    ),
-                                                    icon: const Icon(Icons.lock),
-                                                    onPressed: () {
-                                                      Utils.mySnackBar(
-                                                          title: "Purchase Plan",
-                                                          msg:
-                                                              "Before Purchase Plan");
-                                                    }, // Icon size
-                                                  )
-                                                : IconButton(
-                                                    style: IconButton.styleFrom(
-                                                      foregroundColor:
-                                                          FitnessColor.white,
-                                                      backgroundColor:
-                                                          FitnessColor.primary
-                                                              .withOpacity(0.7),
-                                                    ),
-                                                    icon: const Icon(
-                                                        Icons.play_arrow),
-                                                    onPressed: () {
-                                                      Get.to(() =>
-                                                          TrainerMultipleVideoScree(
-                                                            planId: item.id,
-                                                            monthName:
-                                                                item.planType,
-                                                          ));
-                                                    }, // Icon size
-                                                  ),
+                                          // View More Details Button
+                                          InkWell(
+                                            onTap: () {
+                                              if (item.isPlanPurchased == false) {
+                                                Utils.mySnackBar(
+                                                  title: "Purchase Plan",
+                                                  msg: "Before Purchase Plan",
+                                                );
+                                              } else {
+                                                Get.to(() => TrainerMultipleVideoScree(
+                                                  planId: item.id,
+                                                  monthName: item.planType,
+                                                ));
+                                              }
+                                            },
+                                            child: CustomText(
+                                              text: DemoLocalization.of(context)!
+                                                  .translate('View_more_details')
+                                                  .toString(),
+                                              fontSize: 4.0,
+                                              color: FitnessColor.primary,
+                                              fontFamily: Fonts.arial,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        CustomText(
-                                            text: item.planName ?? 'No Data',
-                                            fontSize: 3.5),
-                                        InkWell(
-                                          onTap: () {
-                                            if (item.isPlanPurchased == false) {
-                                              Utils.mySnackBar(
-                                                  title: "Purchase Plan",
-                                                  msg: "Before Purchase Plan");
-                                            } else {
-                                              Get.to(
-                                                  () => TrainerMultipleVideoScree(
-                                                        planId: item.id,
-                                                        monthName: item.planType,
-                                                      ));
-                                            }
-                                          },
-                                          child: CustomText(
-                                            text: DemoLocalization.of(context)!
-                                                .translate('View_more_details')
-                                                .toString(),
-                                            fontSize: 4.0,
-                                            color: FitnessColor.primary,
-                                            fontFamily: Fonts.arial,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               );
+
                             },
                           );
               }),
